@@ -12,6 +12,7 @@
 
 function[] = Bubbles_Faces()
 Screen('Preference', 'SkipSyncTests', 1);
+Screen('Preference', 'TextRenderer', 0);
 
 %demo         = 1;    % runs demo without participant numbers etc
 run_mode = 1;
@@ -56,11 +57,11 @@ DestRectSize = round([1 1 stimSize * MonitorSpecs.PixelsPerDegree stimSize * Mon
 
 % for QUEST procedur; see QuestDemo.m (Variable naming is similar to QuestDemo.m)
 tmp = dir('.\log'); 
-if  ismember(logfname, {tmp.name})
+if  ismember(logfname, strcat('.\log\', {tmp.name}))
     load(logfname, 'qlog');
     q = qlog.q;
     blocknum = qlog.blocknum;
-elseif ~ ismember(logfname, {tmp.name})
+elseif ~ ismember(logfname, strcat('.\log\', {tmp.name}))
     q = QuestCreate(tGuess, tGuessSd, pThreshold, beta, delta, gamma);
     q.normalizePdf = 1; % This adds a few ms per call to QuestUpdate, but otherwise the pdf will underflow after about 1000 trials.
     blocknum = 0;
@@ -184,6 +185,8 @@ function [escpress] = show_instruction(windowPointer, instTexture, run_mode, blo
        else 
        Screen('Flip', windowPointer);
        Screen('DrawTexture', windowPointer, instTexture);
+       text = ['Block ', num2str(blocknum)];
+       Screen('DrawText', windowPointer, text, 0, 0);
        Screen('Flip', windowPointer); 
        KbQueueFlush();
        [~, keyCode, ~] = KbStrokeWait();
@@ -517,8 +520,8 @@ respk_female = KbName('y');
 respk_male = KbName('m');
 response_instruction = 'y = weiblich, m = männlich';
 elseif response_mapping == 2
-respk_male = KbName('m');
-respk_female = KbName('y');
+respk_female = KbName('m');
+respk_male = KbName('y');
 response_instruction = 'y = männlich, m = weiblich';
 end
 response_keys = [respk_female, respk_male]; %
