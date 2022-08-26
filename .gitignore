@@ -58,5 +58,5 @@ octave-workspace
 
 # stim folder
 /stim
-/data/rp
-/data/raw
+/data
+/KDEFdynl
